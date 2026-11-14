@@ -354,19 +354,21 @@ jobs:
           path: ai-report.txt
 
   deploy-report:
-    needs: ai-analysis
     runs-on: ubuntu-latest
+    needs: ai-analysis
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     permissions:
       pages: write
       id-token: write
+      contents: read
     steps:
       - name: Download AI Report Artifact
         uses: actions/download-artifact@v4
         with:
           name: ai-report
+          path: .
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
