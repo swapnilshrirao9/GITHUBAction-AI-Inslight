@@ -354,37 +354,25 @@ jobs:
           path: ai-report.txt
 
   deploy-report:
-    runs-on: ubuntu-latest
     needs: ai-analysis
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Download All Artifacts
+      - name: Download AI Report Artifact
         uses: actions/download-artifact@v4
+        with:
+          name: ai-report
 
-      - name: Prepare Site
-        run: |
-          mkdir -p site
-          cp reports/index.html site/index.html
-          touch site/.nojekyll
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-          mkdir -p site/test-report
-          mkdir -p site/lint-report
-          mkdir -p site/security-report
-          mkdir -p site/dependency-report
-          mkdir -p site/ai-report
-
-          cp -r test-report/* site/test-report/ || true
-          cp -r lint-report/* site/lint-report/ || true
-          cp -r security-report/* site/security-report/ || true
-          cp -r dependency-report/* site/dependency-report/ || true
-          cp -r ai-report/* site/ai-report/ || true
-
-          cp dependency-report/status.json site/status.json
+      - name: Upload Artifact to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: "${{ secrets.OLLAMA_GITHUB_TOKEN }}"
-          publish_dir: ./site
-          force_orphan: true
+        id: deployment
+        uses: actions/deploy-pages@v4
