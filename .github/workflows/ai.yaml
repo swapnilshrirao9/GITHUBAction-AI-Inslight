@@ -347,22 +347,26 @@ jobs:
           echo "## 🤖 AI DevOps Insights" >> $GITHUB_STEP_SUMMARY
           cat ai-report.txt >> $GITHUB_STEP_SUMMARY
 
+     - name: Prepare AI Report and index.html
+        run: |
+          mkdir -p ai-report
+          # जर ai-report.txt बाहेर असेल तर तिला फोल्डरमध्ये घ्या
+          if [ -f "ai-report.txt" ]; then
+            mv ai-report.txt ai-report/
+          fi
+
+          # जर index.html नसेल तर नवीन तयार करा
+          if [ ! -f "ai-report/index.html" ]; then
+            echo "<h1>AI DevOps Report</h1><pre>" > ai-report/index.html
+            cat ai-report/ai-report.txt >> ai-report/index.html || echo "Report generated." >> ai-report/index.html
+            echo "</pre>" >> ai-report/index.html
+          fi
+
       - name: Upload AI Report
         uses: actions/upload-artifact@v4
         with:
           name: ai-report
-          path: ai-report.txt
-
-      - name: Check if index.html exists
-        run: |
-          echo "Checking for index.html in ai-report folder..."
-          if [ -f "ai-report/index.html" ]; then
-            echo "SUCCESS: index.html found!"
-          else
-            echo "ERROR: index.html NOT found! Creating a fallback one..."
-            mkdir -p ai-report
-            echo "<h1>AI DevOps Report</h1><p>Default index.html created automatically.</p>" > ai-report/index.html
-          fi
+          path: ai-report/
 
   deploy-report:
     runs-on: ubuntu-latest
