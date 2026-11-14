@@ -1,6 +1,7 @@
+# Connect Ollama to scan the GITHUB Action 
 GitHub Repo https://github.com/swapnilshrirao9/GITHUBAction-AI-Inslight
 Create Ollama-API Always update the Vscode port forword option
-# open vscode and open terminal > port> add port value 11434 make Visblity Public
+open vscode and open terminal > port> add port value 11434 make Visblity Public
 
 Step A: Add the Tunnel URL to GitHub Secrets
  Go to your GITHUBAction-AI-Inslight repository ---> Settings ---> Secrets and variables --->Actions.
@@ -9,7 +10,5 @@ Step A: Add the Tunnel URL to GitHub Secrets
 
 Step B Change the line 
 https://swapnilshrirao9.github.io/AI-GithubAction/
-
-
 
 Invoke-RestMethod -Uri "https://<<<URL of VSCode>>>/v1/chat/completions" -Method Post -ContentType "application/json" -Body '{"model":"mistral","messages":[{"role":"user","content":"Hi"}]}'
