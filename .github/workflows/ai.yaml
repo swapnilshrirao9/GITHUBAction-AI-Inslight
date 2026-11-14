@@ -347,7 +347,7 @@ jobs:
           echo "## 🤖 AI DevOps Insights" >> $GITHUB_STEP_SUMMARY
           cat ai-report.txt >> $GITHUB_STEP_SUMMARY
 
-     - name: Prepare AI Report and index.html
+      - name: Prepare AI Report and index.html
         run: |
           mkdir -p ai-report
           # जर ai-report.txt बाहेर असेल तर तिला फोल्डरमध्ये घ्या
