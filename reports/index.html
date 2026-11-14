@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 AI DevOps Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+
+            background:
+                radial-gradient(circle at top left, #ff0080 0%, transparent 25%),
+                radial-gradient(circle at bottom right, #ff6a00 0%, transparent 25%),
+                linear-gradient(135deg, #09090b, #18181b, #27272a);
+
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* CUSTOM SCROLLBAR */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff0066;
+            border-radius: 20px;
+        }
+
+        /* HEADER */
+
+        header {
+            text-align: center;
+            padding: 35px;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 1px;
+
+            background:
+                linear-gradient(90deg,
+                    #ffcc00,
+                    #ff0066,
+                    #ff6600);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            text-shadow:
+                0 0 20px rgba(255, 0, 102, 0.5);
+        }
+
+        #lastUpdated {
+            margin-top: 10px;
+            color: #d4d4d8;
+            font-size: 14px;
+        }
+
+        /* GRID */
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(270px, 1fr));
+
+            gap: 24px;
+
+            padding: 25px;
+        }
+
+        /* CARD */
+
+        .card {
+
+            position: relative;
+
+            overflow: visible;
+
+            background:
+                rgba(255, 255, 255, 0.06);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            backdrop-filter: blur(12px);
+
+            border-radius: 22px;
+
+            padding: 22px;
+
+            text-align: center;
+
+            transition: 0.35s ease;
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(255, 0, 102, 0.1);
+        }
+
+        .card::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: -50%;
+            left: -50%;
+
+            width: 200%;
+            height: 200%;
+
+            background:
+                linear-gradient(45deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.04),
+                    transparent);
+
+            transform: rotate(25deg);
+
+            pointer-events: none;
+        }
+
+        .card:hover {
+
+            transform:
+                translateY(-8px) scale(1.02);
+
+            box-shadow:
+                0 0 25px rgba(255, 0, 102, 0.35),
+                0 0 50px rgba(255, 102, 0, 0.2);
+        }
+
+        /* DIFFERENT CARD COLORS */
+
+        .card:nth-child(1) {
+            border-top: 4px solid #00e5ff;
+        }
+
+        .card:nth-child(2) {
+            border-top: 4px solid #ff1744;
+        }
+
+        .card:nth-child(3) {
+            border-top: 4px solid #00ff85;
+        }
+
+        .card:nth-child(4) {
+            border-top: 4px solid #2979ff;
+        }
+
+        .card:nth-child(5) {
+            border-top: 4px solid #aa00ff;
+        }
+
+        .card:nth-child(6) {
+            border-top: 4px solid #ff3d00;
+        }
+
+        .card:nth-child(7) {
+            border-top: 4px solid #ff9100;
+        }
+
+        .card:nth-child(8) {
+            border-top: 4px solid #ff0080;
+        }
+
+        /* HEADINGS */
+
+        .card h3 {
+            font-size: 22px;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* CONTENT */
+
+        .card div,
+        .card a,
+        .card p {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* STATUS COLORS */
+
+        .success {
+            color: #00ff9d;
+            font-weight: bold;
+            font-size: 22px;
+
+            text-shadow:
+                0 0 12px rgba(0, 255, 157, 0.5);
+        }
+
+        .warning {
+            color: #ffd600;
+            font-weight: bold;
+            font-size: 22px;
+
+            text-shadow:
+                0 0 12px rgba(255, 214, 0, 0.5);
+        }
+
+        .danger {
+            color: #ff1744;
+            font-weight: bold;
+            font-size: 22px;
+
+            text-shadow:
+                0 0 12px rgba(255, 23, 68, 0.5);
+        }
+
+        /* BADGES */
+
+        .badge {
+
+            padding: 8px 14px;
+
+            border-radius: 30px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            display: inline-block;
+
+            letter-spacing: 0.5px;
+        }
+
+        .badge-green {
+            background:
+                linear-gradient(90deg,
+                    #00c853,
+                    #00e676);
+        }
+
+        .badge-yellow {
+            background:
+                linear-gradient(90deg,
+                    #ff9100,
+                    #ffd600);
+        }
+
+        .badge-red {
+            background:
+                linear-gradient(90deg,
+                    #ff1744,
+                    #ff5252);
+        }
+
+        /* BUTTONS */
+
+        a {
+
+            display: inline-block;
+
+            margin-top: 16px;
+
+            padding: 11px 18px;
+
+            background:
+                linear-gradient(90deg,
+                    #ff0066,
+                    #ff6600);
+
+            border-radius: 12px;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-weight: 700;
+
+            transition: 0.3s ease;
+
+            box-shadow:
+                0 0 15px rgba(255, 0, 102, 0.3);
+        }
+
+        a:hover {
+
+            transform: scale(1.06);
+
+            box-shadow:
+                0 0 25px rgba(255, 0, 102, 0.6);
+        }
+
+        /* AI BOX */
+
+        .ai-box {
+
+            text-align: left;
+
+            background:
+                rgba(0, 0, 0, 0.35);
+
+            padding: 16px;
+
+            border-radius: 14px;
+
+            max-height: 260px;
+
+            overflow-y: auto;
+
+            overflow-x: auto;
+
+            word-break: break-word;
+
+            scrollbar-width: thin;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* BIG CARDS */
+
+        .highlight {
+            grid-column: span 2;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:768px) {
+
+            .highlight {
+                grid-column: span 1;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            .grid {
+                padding: 16px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <h1>🚀 AI DevOps Dashboard</h1>
+        <p id="lastUpdated">Loading...</p>
+    </header>
+
+    <div class="grid">
+
+        <!-- DEPLOYMENT -->
+
+        <div class="card highlight">
+            <h3>🚀 Deployment Status</h3>
+            <div id="deployStatus">Checking...</div>
+        </div>
+
+        <!-- RISK -->
+
+        <div class="card highlight">
+            <h3>🔥 Risk Score</h3>
+            <div id="riskScore">Analyzing...</div>
+        </div>
+
+        <!-- TEST -->
+
+        <div class="card">
+            <h3>🧪 Tests</h3>
+            <div id="testStatus">...</div>
+
+            <a href="test-report/report.html" target="_blank">
+                View Report
+            </a>
+        </div>
+
+        <!-- COVERAGE -->
+
+        <div class="card">
+            <h3>📊 Coverage</h3>
+            <div id="coverageStatus">...</div>
+        </div>
+
+        <!-- LINT -->
+
+        <div class="card">
+            <h3>🧹 Lint</h3>
+            <div id="lintStatus">...</div>
+
+            <a href="lint-report/flake8-report/index.html" target="_blank">
+                View Report
+            </a>
+        </div>
+
+        <!-- SECURITY -->
+
+        <div class="card">
+            <h3>🔐 Security</h3>
+            <div id="securityStatus">...</div>
+
+            <a href="security-report/bandit-report.html" target="_blank">
+                View Report
+            </a>
+        </div>
+
+        <!-- DEPENDENCY -->
+
+        <div class="card">
+            <h3>📦 Dependency</h3>
+            <div id="dependencyStatus">...</div>
+
+            <a href="dependency-report/dependency-report.html" target="_blank">
+                View Report
+            </a>
+        </div>
+
+        <!-- AI -->
+
+        <div class="card highlight">
+
+            <h3>🤖 AI Insights</h3>
+
+            <div id="aiSummary" class="badge badge-yellow">
+
+                Analyzing...
+
+            </div>
+
+            <br><br>
+
+            <div id="aiContent" class="ai-box">
+
+                Loading AI insights...
+
+            </div>
+
+            <a href="ai-report/ai-report.txt" target="_blank">
+
+                Full Report
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        // STATUS DATA
+
+        fetch('status.json?t=' + Date.now())
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                function setStatus(id, value) {
+
+                    const el =
+                        document.getElementById(id);
+
+                    if (value === "passed") {
+
+                        el.innerHTML = "✔ Passed";
+                        el.className = "success";
+
+                    } else if (value === "warning") {
+
+                        el.innerHTML = "⚠ Warning";
+                        el.className = "warning";
+
+                    } else {
+
+                        el.innerHTML = "❌ Failed";
+                        el.className = "danger";
+                    }
+                }
+
+                setStatus("testStatus", data.tests);
+
+                setStatus("lintStatus", data.lint);
+
+                setStatus("securityStatus", data.security);
+
+                setStatus("dependencyStatus", data.dependency);
+
+                // COVERAGE
+
+                let cov =
+                    parseFloat(data.coverage) || 0;
+
+                document.getElementById(
+                    "coverageStatus"
+                ).innerHTML = cov + "%";
+
+                // RISK LOGIC
+
+                let risk = "LOW";
+
+                if (
+                    data.lint === "warning" ||
+                    data.security === "warning" ||
+                    data.dependency === "warning"
+                ) {
+
+                    risk = "MEDIUM";
+                }
+
+                if (data.tests !== "passed") {
+
+                    risk = "HIGH";
+                }
+
+                // DEPLOY LOGIC
+
+                let deploy =
+                    risk === "LOW"
+                        ? "SAFE TO DEPLOY ✅"
+                        : "NOT SAFE ❌";
+
+                document.getElementById(
+                    "riskScore"
+                ).innerHTML = risk;
+
+                document.getElementById(
+                    "deployStatus"
+                ).innerHTML = deploy;
+
+                document.getElementById(
+                    "lastUpdated"
+                ).innerText =
+                    "Last updated: " +
+                    new Date().toLocaleString();
+
+            });
+
+        // AI DATA
+
+        fetch('ai-report/ai-report.txt?t=' + Date.now())
+
+            .then(res => res.text())
+
+            .then(text => {
+
+                document.getElementById(
+                    "aiContent"
+                ).innerText = text;
+
+                if (
+                    text.toLowerCase().includes("warning") ||
+                    text.toLowerCase().includes("issue")
+                ) {
+
+                    document.getElementById(
+                        "aiSummary"
+                    ).innerText =
+                        "⚠ Issues Detected";
+
+                    document.getElementById(
+                        "aiSummary"
+                    ).className =
+                        "badge badge-yellow";
+
+                } else {
+
+                    document.getElementById(
+                        "aiSummary"
+                    ).innerText =
+                        "✔ Healthy Pipeline";
+
+                    document.getElementById(
+                        "aiSummary"
+                    ).className =
+                        "badge badge-green";
+                }
+
+            })
+
+            .catch(() => {
+
+                document.getElementById(
+                    "aiContent"
+                ).innerText =
+                    "AI report not found";
+
+            });
+
+    </script>
+
+</body>
+
+</html>
