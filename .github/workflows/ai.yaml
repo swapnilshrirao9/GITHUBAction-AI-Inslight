@@ -353,6 +353,17 @@ jobs:
           name: ai-report
           path: ai-report.txt
 
+      - name: Check if index.html exists
+        run: |
+          echo "Checking for index.html in ai-report folder..."
+          if [ -f "ai-report/index.html" ]; then
+            echo "SUCCESS: index.html found!"
+          else
+            echo "ERROR: index.html NOT found! Creating a fallback one..."
+            mkdir -p ai-report
+            echo "<h1>AI DevOps Report</h1><p>Default index.html created automatically.</p>" > ai-report/index.html
+          fi
+
   deploy-report:
     runs-on: ubuntu-latest
     needs: ai-analysis
